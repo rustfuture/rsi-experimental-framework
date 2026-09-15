@@ -1,86 +1,144 @@
 {
-  "accepted_count": {
-    "mean": 2.3333,
-    "std": 1.1547
+  "accepted_baseline_included_count": {
+    "mean": 3.6667,
+    "n": 3,
+    "std": 2.3094,
+    "stdev_ddof": 1
+  },
+  "accepted_new_changes": {
+    "mean": 2.6667,
+    "n": 3,
+    "std": 2.3094,
+    "stdev_ddof": 1
   },
   "dev_accuracy": {
-    "mean": 0.75,
-    "std": 0.2165
+    "mean": 0.875,
+    "n": 3,
+    "std": 0.2165,
+    "stdev_ddof": 1
   },
+  "dev_examples_per_seed": 8,
+  "experiment_version": "v2-token-match",
   "heldout_accuracy": {
-    "mean": 0.6667,
-    "std": 0.0722
+    "mean": 0.875,
+    "n": 3,
+    "std": 0.2165,
+    "stdev_ddof": 1
   },
+  "heldout_examples_per_seed": 8,
   "heldout_gain": {
-    "mean": 0.0833,
-    "std": 0.0722
+    "mean": 0.2917,
+    "n": 3,
+    "std": 0.2602,
+    "stdev_ddof": 1
   },
   "num_runs": 3,
   "regression_count": {
-    "mean": 4.6667,
-    "std": 4.1633
+    "mean": 2.6667,
+    "n": 3,
+    "std": 4.6188,
+    "stdev_ddof": 1
+  },
+  "rejected_proposal_count": {
+    "mean": 0.0,
+    "n": 3,
+    "std": 0.0,
+    "stdev_ddof": 1
   },
   "runs": [
     {
-      "accepted_count": 3,
-      "artifact_hash": "6705b9bb31491fc4b5d7d74572a0a4b4680c89097288651e3c08f22a6213ec6b",
+      "accepted_baseline_included_count": 5,
+      "accepted_new_change_count": 4,
+      "artifact_hash": "9771cfb4a95eca998659f5a20001c60ba140c58b411f9d43b78b10b34e3e4065",
       "baseline_dev_acc": 0.5,
       "baseline_heldout_acc": 0.5,
       "baseline_train_acc": 0.5,
+      "config_hash": "c30df0ae46a30a508fa2a84225386368a7d8732739b64f6f75909f1fa9e605e8",
+      "dataset_hash": "c7980d398ebfa64c13a28b290443bc0d784a35e5ec1df46fe1c7313a68eed385",
+      "dev_total": 8,
+      "experiment_version": "v2-token-match",
       "final_dev_acc": 1.0,
-      "final_heldout_acc": 0.625,
-      "final_train_acc": 0.6875,
-      "final_version": "candidate-f41795a16605",
-      "heldout_gain": 0.125,
+      "final_heldout_acc": 1.0,
+      "final_train_acc": 1.0,
+      "final_version": "candidate-9b822e7297ac",
+      "heldout_correct": 8,
+      "heldout_gain": 0.5,
+      "heldout_total": 8,
       "outcome": "improvement",
       "regression_count": 0,
-      "runtime_seconds": 0.00391,
-      "seed": 42
+      "rejected_proposal_count": 0,
+      "runtime_seconds": 0.00536,
+      "seed": 42,
+      "train_total": 16
     },
     {
-      "accepted_count": 3,
-      "artifact_hash": "904cbbe4503357a879a8cb15de2f3424a92f5c97cf71a155dfa6f6ac48cc15de",
+      "accepted_baseline_included_count": 5,
+      "accepted_new_change_count": 4,
+      "artifact_hash": "fe667bc5dc5f7eecdebed93ddc62d474206f70fa400ae5c1fd91a188983dc07a",
       "baseline_dev_acc": 0.375,
       "baseline_heldout_acc": 0.625,
       "baseline_train_acc": 0.5,
-      "final_dev_acc": 0.625,
-      "final_heldout_acc": 0.75,
-      "final_train_acc": 0.8125,
-      "final_version": "candidate-f41795a16605",
-      "heldout_gain": 0.125,
+      "config_hash": "9d96bb24c7d6ade961abf70af53479aef08cc66cc3739e148cf23b8cc7be470e",
+      "dataset_hash": "fa19e1e555b3e1ec44446b560508e6171756c73fad92a8468fe3c5eb308aefd6",
+      "dev_total": 8,
+      "experiment_version": "v2-token-match",
+      "final_dev_acc": 1.0,
+      "final_heldout_acc": 1.0,
+      "final_train_acc": 1.0,
+      "final_version": "candidate-9b822e7297ac",
+      "heldout_correct": 8,
+      "heldout_gain": 0.375,
+      "heldout_total": 8,
       "outcome": "improvement",
-      "regression_count": 6,
-      "runtime_seconds": 0.00384,
-      "seed": 1337
+      "regression_count": 0,
+      "rejected_proposal_count": 0,
+      "runtime_seconds": 0.00507,
+      "seed": 1337,
+      "train_total": 16
     },
     {
-      "accepted_count": 1,
-      "artifact_hash": "c64292f6c0bc82f52c9c8de06306a1a8b1389b8afcad28499b12a7d7be0065f4",
+      "accepted_baseline_included_count": 1,
+      "accepted_new_change_count": 0,
+      "artifact_hash": "c3c91b7451302adc23d11995834ebd4402fe367769765be49cb3bc5aef943adc",
       "baseline_dev_acc": 0.625,
       "baseline_heldout_acc": 0.625,
       "baseline_train_acc": 0.375,
+      "config_hash": "2511a2a8874dc9187ec84b9398df9028fc7d95f53ade3a5f6eecd53313a0ae45",
+      "dataset_hash": "3d903a2576ac3a1c10a6ec05fa7012e7abcaa32db3673579f360be244ff5c7b9",
+      "dev_total": 8,
+      "experiment_version": "v2-token-match",
       "final_dev_acc": 0.625,
       "final_heldout_acc": 0.625,
       "final_train_acc": 0.375,
       "final_version": "candidate-37b6efef5046",
+      "heldout_correct": 5,
       "heldout_gain": 0.0,
+      "heldout_total": 8,
       "outcome": "flat",
       "regression_count": 8,
-      "runtime_seconds": 0.00398,
-      "seed": 2026
+      "rejected_proposal_count": 0,
+      "runtime_seconds": 0.00723,
+      "seed": 2026,
+      "train_total": 16
     }
   ],
   "runtime_seconds": {
-    "mean": 0.0039,
-    "std": 0.0001
+    "mean": 0.0059,
+    "n": 3,
+    "std": 0.0012,
+    "stdev_ddof": 1
   },
+  "same_synthetic_pool_across_seeds": true,
   "seeds": [
     42,
     1337,
     2026
   ],
   "train_accuracy": {
-    "mean": 0.625,
-    "std": 0.2253
-  }
+    "mean": 0.7917,
+    "n": 3,
+    "std": 0.3608,
+    "stdev_ddof": 1
+  },
+  "train_examples_per_seed": 16
 }

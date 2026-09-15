@@ -1,41 +1,65 @@
 """RSI experimental framework: a deterministic baseline for iterative selection."""
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from .core import (
+    ABLATION_MECHANISMS,
+    EXPERIMENT_VERSION,
+    LEGACY_ROLLBACK_DECISION,
+    ROLLBACK_DECISION,
     Candidate,
     DeterministicMutationGenerator,
     Example,
     Policy,
     Scores,
     build_lineage_tree,
+    config_hash,
+    dataset_hash,
     evaluate,
     extract_lineage_chain,
+    extract_lineage_events,
+    lineage_integrity,
     make_dataset,
     run_ablation_experiments,
     run_experiment,
     run_multi_seed_experiment,
+    tokenize,
 )
 from .providers import (
     CandidateGenerator,
+    JsonFileProposalProvider,
     OpenWeightColabL4Stub,
     OpenWeightLLMProvider,
+    ProposalError,
+    validate_proposal,
 )
 
 __all__ = [
+    "ABLATION_MECHANISMS",
+    "EXPERIMENT_VERSION",
+    "LEGACY_ROLLBACK_DECISION",
+    "ROLLBACK_DECISION",
     "Candidate",
     "CandidateGenerator",
     "DeterministicMutationGenerator",
     "Example",
+    "JsonFileProposalProvider",
     "OpenWeightColabL4Stub",
     "OpenWeightLLMProvider",
     "Policy",
+    "ProposalError",
     "Scores",
     "build_lineage_tree",
+    "config_hash",
+    "dataset_hash",
     "evaluate",
     "extract_lineage_chain",
+    "extract_lineage_events",
+    "lineage_integrity",
     "make_dataset",
     "run_ablation_experiments",
     "run_experiment",
     "run_multi_seed_experiment",
+    "tokenize",
+    "validate_proposal",
 ]

@@ -1,18 +1,8 @@
 {
-  "accepted_baseline_included_count": 5,
-  "accepted_new_change_count": 4,
-  "accepted_new_changes": [
-    "candidate-0690ff52e16a",
-    "candidate-da153e0ba319",
-    "candidate-e72f7ebf4635",
-    "candidate-9b822e7297ac"
-  ],
   "accepted_versions": [
     "candidate-37b6efef5046",
     "candidate-0690ff52e16a",
-    "candidate-da153e0ba319",
-    "candidate-e72f7ebf4635",
-    "candidate-9b822e7297ac"
+    "candidate-f41795a16605"
   ],
   "baseline": {
     "dev": {
@@ -55,27 +45,24 @@
     "regression_tolerance": 0.0,
     "seed": 20260915
   },
-  "config_hash": "1015a828f8f5f9ee45cdbb4027f5b9cc28d2b4964c29929c8bdf03518d538e9a",
-  "dataset_hash": "accb9de6e25fcbfaf573ab52122c88e004aeba1895f05a6208179e8a70996466",
   "experiment": "deterministic-policy-mutation-harness",
-  "experiment_version": "v2-token-match",
   "final": {
     "dev": {
-      "accuracy": 1.0,
-      "correct": 8,
+      "accuracy": 0.625,
+      "correct": 5,
       "total": 8
     },
     "heldout": {
-      "accuracy": 1.0,
-      "correct": 8,
+      "accuracy": 0.75,
+      "correct": 6,
       "total": 8
     },
     "train": {
-      "accuracy": 1.0,
-      "correct": 16,
+      "accuracy": 0.8125,
+      "correct": 13,
       "total": 16
     },
-    "version": "candidate-9b822e7297ac"
+    "version": "candidate-f41795a16605"
   },
   "history": [
     {
@@ -86,10 +73,8 @@
         "correct": 3,
         "total": 8
       },
-      "event_id": "g0",
       "generation": 0,
       "mutation": "baseline",
-      "parent_event_id": null,
       "parent_version": null,
       "policy": {
         "bias": 0,
@@ -115,10 +100,8 @@
         "correct": 4,
         "total": 8
       },
-      "event_id": "g1-c5",
       "generation": 1,
       "mutation": "add_positive:useful",
-      "parent_event_id": "g0",
       "parent_version": "candidate-37b6efef5046",
       "policy": {
         "bias": 0,
@@ -145,10 +128,8 @@
         "correct": 5,
         "total": 8
       },
-      "event_id": "g2-c15",
       "generation": 2,
-      "mutation": "add_positive:safe",
-      "parent_event_id": "g1-c5",
+      "mutation": "add_positive:reliable",
       "parent_version": "candidate-0690ff52e16a",
       "policy": {
         "bias": 0,
@@ -157,231 +138,207 @@
         ],
         "positive_keywords": [
           "good",
-          "safe",
+          "reliable",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 0.875,
-        "correct": 14,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-da153e0ba319"
+      "version": "candidate-f41795a16605"
     },
     {
-      "accepted": true,
-      "decision": "accepted_improvement",
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 0.875,
-        "correct": 7,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g3-c12",
       "generation": 3,
-      "mutation": "add_positive:clear",
-      "parent_event_id": "g2-c15",
-      "parent_version": "candidate-da153e0ba319",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
-          "bad"
+          "bad",
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
-          "safe",
+          "reliable",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 0.9375,
-        "correct": 15,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-e72f7ebf4635"
+      "version": "candidate-0c9b90149290"
     },
     {
-      "accepted": true,
-      "decision": "accepted_improvement",
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 1.0,
-        "correct": 8,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g4-c2",
       "generation": 4,
-      "mutation": "add_positive:reliable",
-      "parent_event_id": "g3-c12",
-      "parent_version": "candidate-e72f7ebf4635",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
-          "bad"
+          "bad",
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
           "reliable",
-          "safe",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 1.0,
-        "correct": 16,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-9b822e7297ac"
+      "version": "candidate-0c9b90149290"
     },
     {
       "accepted": false,
       "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 1.0,
-        "correct": 8,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g5-c3",
       "generation": 5,
-      "mutation": "add_negative:risky",
-      "parent_event_id": "g4-c2",
-      "parent_version": "candidate-9b822e7297ac",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
           "bad",
-          "risky"
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
           "reliable",
-          "safe",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 1.0,
-        "correct": 16,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-3942687fb413"
+      "version": "candidate-0c9b90149290"
     },
     {
       "accepted": false,
       "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 1.0,
-        "correct": 8,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g6-c4",
       "generation": 6,
-      "mutation": "add_negative:risky",
-      "parent_event_id": "g4-c2",
-      "parent_version": "candidate-9b822e7297ac",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
           "bad",
-          "risky"
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
           "reliable",
-          "safe",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 1.0,
-        "correct": 16,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-3942687fb413"
+      "version": "candidate-0c9b90149290"
     },
     {
       "accepted": false,
       "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 1.0,
-        "correct": 8,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g7-c8",
       "generation": 7,
-      "mutation": "add_negative:risky",
-      "parent_event_id": "g4-c2",
-      "parent_version": "candidate-9b822e7297ac",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
           "bad",
-          "risky"
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
           "reliable",
-          "safe",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 1.0,
-        "correct": 16,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-3942687fb413"
+      "version": "candidate-0c9b90149290"
     },
     {
       "accepted": false,
       "decision": "flat_or_no_train_dev_gain",
       "dev": {
-        "accuracy": 1.0,
-        "correct": 8,
+        "accuracy": 0.625,
+        "correct": 5,
         "total": 8
       },
-      "event_id": "g8-c5",
       "generation": 8,
-      "mutation": "add_negative:risky",
-      "parent_event_id": "g4-c2",
-      "parent_version": "candidate-9b822e7297ac",
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
       "policy": {
         "bias": 0,
         "negative_keywords": [
           "bad",
-          "risky"
+          "clear"
         ],
         "positive_keywords": [
-          "clear",
           "good",
           "reliable",
-          "safe",
           "useful"
         ]
       },
       "train": {
-        "accuracy": 1.0,
-        "correct": 16,
+        "accuracy": 0.8125,
+        "correct": 13,
         "total": 16
       },
-      "version": "candidate-3942687fb413"
+      "version": "candidate-0c9b90149290"
     }
   ],
   "limitations": [
     "No LLM or paid API was used; mutation loop only validates harness mechanics.",
     "Synthetic lexical task is not evidence of general self-improvement.",
-    "The held-out split is consulted only for the final measurement.",
-    "All seeds re-split the same 32-row synthetic sentence pool; runs are replays, not independent real-world datasets."
+    "The held-out split is consulted only for the final measurement."
   ],
   "method_label": "HARNESS_BASELINE_NOT_LLM",
   "outcome": "improvement",
-  "rejected_proposal_count": 0,
-  "rejected_proposals": [],
   "research_question": "Can a fixed base LLM-driven system improve held-out task performance through iterative candidate generation/evaluation/selection?",
-  "schema_version": 2,
+  "schema_version": 1,
   "seed": 20260915,
   "splits": {
     "dev": 8,

@@ -1,0 +1,74 @@
+{
+  "command": "python -m rsi_framework --run-all-benchmarks --output results --readme README.md",
+  "config": {
+    "examples_per_pattern": 4,
+    "generations": 8,
+    "initial_bias": 0,
+    "initial_negative_keywords": [
+      "bad"
+    ],
+    "initial_positive_keywords": [
+      "good"
+    ],
+    "mutation_pool": [
+      "reliable",
+      "clear",
+      "safe",
+      "useful",
+      "risky",
+      "unclear",
+      "unsafe",
+      "harmful"
+    ],
+    "regression_tolerance": 0.0,
+    "seed": 20260915
+  },
+  "config_hash": "1015a828f8f5f9ee45cdbb4027f5b9cc28d2b4964c29929c8bdf03518d538e9a",
+  "dataset_hash": "accb9de6e25fcbfaf573ab52122c88e004aeba1895f05a6208179e8a70996466",
+  "experiment_version": "v2-token-match",
+  "generated_by": "python -m rsi_framework",
+  "note": "Records the checkout state at run time. Deliberately excluded from the byte-reproducibility claim because the commit and dirty state vary. The dirty list normally contains the artifacts this run just wrote.",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "python": "3.14.5",
+  "source_commit": "9a64e1d8baf206abb5618339f0027ed8246fa8bf",
+  "source_dirty": true,
+  "source_dirty_file_count": 31,
+  "source_dirty_files": [
+    "M  .github/workflows/ci.yml",
+    "M  CHANGELOG.md",
+    "M  DESIGN.md",
+    "M  README.md",
+    "M  pyproject.toml",
+    "MM results/ablation_metrics.csv",
+    "MM results/ablation_results.json",
+    "A  results/archive-v1/README.md",
+    "A  results/archive-v1/ablation_metrics.csv",
+    "A  results/archive-v1/ablation_results.json",
+    "A  results/archive-v1/first_run.json",
+    "A  results/archive-v1/history.jsonl",
+    "A  results/archive-v1/metrics.csv",
+    "A  results/archive-v1/multi_seed_metrics.csv",
+    "A  results/archive-v1/multi_seed_results.json",
+    "A  results/archive-v1/progress.svg",
+    "A  results/archive-v1/report.md",
+    "MM results/first_run.json",
+    "MM results/history.jsonl",
+    "M  results/metrics.csv",
+    "MM results/multi_seed_metrics.csv",
+    "MM results/multi_seed_results.json",
+    "M  results/progress.svg",
+    "A  results/provenance.json",
+    "M  results/report.md",
+    "M  rsi_framework/__init__.py",
+    "M  rsi_framework/cli.py",
+    "MM rsi_framework/core.py",
+    "M  rsi_framework/providers.py",
+    "A  rsi_framework/reporting.py",
+    "MM tests/test_core.py"
+  ],
+  "splits": {
+    "dev": 8,
+    "heldout": 8,
+    "train": 16
+  }
+}
