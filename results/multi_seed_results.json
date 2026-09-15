@@ -1,0 +1,86 @@
+{
+  "accepted_count": {
+    "mean": 2.3333,
+    "std": 1.1547
+  },
+  "dev_accuracy": {
+    "mean": 0.75,
+    "std": 0.2165
+  },
+  "heldout_accuracy": {
+    "mean": 0.6667,
+    "std": 0.0722
+  },
+  "heldout_gain": {
+    "mean": 0.0833,
+    "std": 0.0722
+  },
+  "num_runs": 3,
+  "regression_count": {
+    "mean": 4.6667,
+    "std": 4.1633
+  },
+  "runs": [
+    {
+      "accepted_count": 3,
+      "artifact_hash": "6705b9bb31491fc4b5d7d74572a0a4b4680c89097288651e3c08f22a6213ec6b",
+      "baseline_dev_acc": 0.5,
+      "baseline_heldout_acc": 0.5,
+      "baseline_train_acc": 0.5,
+      "final_dev_acc": 1.0,
+      "final_heldout_acc": 0.625,
+      "final_train_acc": 0.6875,
+      "final_version": "candidate-f41795a16605",
+      "heldout_gain": 0.125,
+      "outcome": "improvement",
+      "regression_count": 0,
+      "runtime_seconds": 0.00391,
+      "seed": 42
+    },
+    {
+      "accepted_count": 3,
+      "artifact_hash": "904cbbe4503357a879a8cb15de2f3424a92f5c97cf71a155dfa6f6ac48cc15de",
+      "baseline_dev_acc": 0.375,
+      "baseline_heldout_acc": 0.625,
+      "baseline_train_acc": 0.5,
+      "final_dev_acc": 0.625,
+      "final_heldout_acc": 0.75,
+      "final_train_acc": 0.8125,
+      "final_version": "candidate-f41795a16605",
+      "heldout_gain": 0.125,
+      "outcome": "improvement",
+      "regression_count": 6,
+      "runtime_seconds": 0.00384,
+      "seed": 1337
+    },
+    {
+      "accepted_count": 1,
+      "artifact_hash": "c64292f6c0bc82f52c9c8de06306a1a8b1389b8afcad28499b12a7d7be0065f4",
+      "baseline_dev_acc": 0.625,
+      "baseline_heldout_acc": 0.625,
+      "baseline_train_acc": 0.375,
+      "final_dev_acc": 0.625,
+      "final_heldout_acc": 0.625,
+      "final_train_acc": 0.375,
+      "final_version": "candidate-37b6efef5046",
+      "heldout_gain": 0.0,
+      "outcome": "flat",
+      "regression_count": 8,
+      "runtime_seconds": 0.00398,
+      "seed": 2026
+    }
+  ],
+  "runtime_seconds": {
+    "mean": 0.0039,
+    "std": 0.0001
+  },
+  "seeds": [
+    42,
+    1337,
+    2026
+  ],
+  "train_accuracy": {
+    "mean": 0.625,
+    "std": 0.2253
+  }
+}
