@@ -54,9 +54,15 @@ def validate_proposal(
     positive = tuple(proposed.positive_keywords)
     negative = tuple(proposed.negative_keywords)
 
+    if type(proposed.bias) is not int:
+        raise ProposalError("bias must be an integer")
+
     for word in positive + negative:
         if not isinstance(word, str) or not _KEYWORD_RE.match(word):
             raise ProposalError(f"illegal keyword {word!r}: expected a single lowercase token")
+
+    if len(set(positive)) != len(positive) or len(set(negative)) != len(negative):
+        raise ProposalError("duplicate keywords are not allowed")
 
     overlap = set(positive) & set(negative)
     if overlap:
@@ -120,13 +126,14 @@ class JsonFileProposalProvider:
         ]}
 
     and the harness validates every entry via :func:`validate_proposal`. A
-    top-level JSON list is also accepted. Malformed entries are returned as-is so
-    the caller records them as rejections rather than crashing the run.
+    top-level JSON list is also accepted. Malformed entries are recorded in
+    ``rejections`` for the harness; valid siblings continue through validation.
     """
 
     def __init__(self, path: str | Path):
         self.path = Path(path)
         self._cache: list[dict] | None = None
+        self.rejections: list[dict] = []
 
     @property
     def generator_type(self) -> str:
@@ -136,7 +143,10 @@ class JsonFileProposalProvider:
         if self._cache is None:
             payload = json.loads(self.path.read_text())
             if isinstance(payload, dict):
-                self._cache = list(payload.get("candidates", []))
+                entries = payload.get("candidates", [])
+                if not isinstance(entries, list):
+                    raise ProposalError("candidates must be a list")
+                self._cache = entries
             elif isinstance(payload, list):
                 self._cache = list(payload)
             else:
@@ -147,7 +157,24 @@ class JsonFileProposalProvider:
         from .core import Candidate, Policy  # local import avoids an import cycle
 
         proposals: list[Candidate] = []
+        self.rejections = []
         for index, entry in enumerate(self._load()):
+            try:
+                if not isinstance(entry, dict) or not isinstance(entry.get("policy"), dict):
+                    raise ProposalError("candidate and policy must be objects")
+                payload = entry["policy"]
+                for key in ("positive_keywords", "negative_keywords"):
+                    words = payload.get(key, [])
+                    if not isinstance(words, list) or any(not isinstance(w, str) for w in words):
+                        raise ProposalError(f"{key} must be a list of strings")
+                if type(payload.get("bias", 0)) is not int:
+                    raise ProposalError("bias must be an integer")
+                if not isinstance(entry.get("mutation", "external"), str):
+                    raise ProposalError("mutation must be a string")
+            except ProposalError as exc:
+                self.rejections.append({"event_id": f"g{generation}-ext{index}",
+                                        "generation": generation, "reason": str(exc)})
+                continue
             policy_payload = entry.get("policy", {})
             policy = Policy(
                 tuple(policy_payload.get("positive_keywords", ())),

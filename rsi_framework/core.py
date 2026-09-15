@@ -401,6 +401,7 @@ def run_experiment(
             raw_proposals: list[Candidate] = []
         else:
             raw_proposals = list(generator.generate(current, generation, seed))
+            rejected_proposals.extend(getattr(generator, "rejections", []))
 
         # Validate every proposal before it can influence selection. Malformed or
         # out-of-policy mutations are rejected and never scored.
