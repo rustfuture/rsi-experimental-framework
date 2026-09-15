@@ -1,0 +1,62 @@
+{
+  "modes": [
+    "baseline_full",
+    "ablation_no_mutation",
+    "ablation_no_selection",
+    "ablation_no_rollback"
+  ],
+  "runs": [
+    {
+      "accepted_count": 3,
+      "artifact_hash": "a0e6d76511938828489bc6719d3c1fb362d8ad6a75e0967855be41caff557720",
+      "final_dev_acc": 0.625,
+      "final_heldout_acc": 0.75,
+      "final_train_acc": 0.8125,
+      "final_version": "candidate-f41795a16605",
+      "heldout_gain": 0.375,
+      "mode": "baseline_full",
+      "outcome": "improvement",
+      "regression_count": 0,
+      "runtime_seconds": 0.00386
+    },
+    {
+      "accepted_count": 1,
+      "artifact_hash": "ab002edaa4fbd179cb669ca88e124e45147dd9b9295f76d339251245bfb7b2b9",
+      "final_dev_acc": 0.375,
+      "final_heldout_acc": 0.375,
+      "final_train_acc": 0.625,
+      "final_version": "candidate-37b6efef5046",
+      "heldout_gain": 0.0,
+      "mode": "ablation_no_mutation",
+      "outcome": "flat",
+      "regression_count": 0,
+      "runtime_seconds": 0.00015
+    },
+    {
+      "accepted_count": 3,
+      "artifact_hash": "f70309c8cd83da095c6a8633a794651dcf5ff3c7ecc0f66a1b8a592aeb892f7c",
+      "final_dev_acc": 0.625,
+      "final_heldout_acc": 0.75,
+      "final_train_acc": 0.8125,
+      "final_version": "candidate-f41795a16605",
+      "heldout_gain": 0.375,
+      "mode": "ablation_no_selection",
+      "outcome": "improvement",
+      "regression_count": 0,
+      "runtime_seconds": 0.00382
+    },
+    {
+      "accepted_count": 3,
+      "artifact_hash": "e0d7de398109ca2969f282c66e6b52c8d746ad5476f53c68ba316c7bcd65731a",
+      "final_dev_acc": 0.625,
+      "final_heldout_acc": 0.75,
+      "final_train_acc": 0.8125,
+      "final_version": "candidate-f41795a16605",
+      "heldout_gain": 0.375,
+      "mode": "ablation_no_rollback",
+      "outcome": "improvement",
+      "regression_count": 0,
+      "runtime_seconds": 0.00383
+    }
+  ]
+}

@@ -1,5 +1,6 @@
-mode,final_train_acc,final_dev_acc,final_heldout_acc,heldout_gain,regression_count,accepted_count,runtime_seconds,outcome
-baseline_full,0.8125,0.625,0.75,0.375,0,3,0.00386,improvement
-ablation_no_mutation,0.625,0.375,0.375,0.0,0,1,0.00015,flat
-ablation_no_selection,0.8125,0.625,0.75,0.375,0,3,0.00382,improvement
-ablation_no_rollback,0.8125,0.625,0.75,0.375,0,3,0.00383,improvement
+mode,mechanism,final_train_acc,final_dev_acc,final_heldout_acc,heldout_gain,regression_count,accepted_baseline_included_count,accepted_new_change_count,rejected_proposal_count,runtime_seconds,outcome
+baseline_full,Unmodified loop: dev-aware lexicographic selection with dev-regression rejection.,1.0,1.0,1.0,0.625,0,5,4,0,0.00507,improvement
+ablation_no_mutation,Candidate proposal disabled (generator never called); isolates the contribution of mutation.,0.625,0.375,0.375,0.0,0,1,0,0,0.00022,flat
+ablation_no_selection,"Dev-blind greedy selection: candidates ranked by train accuracy (and version) only. Dev is still measured but cannot influence the pick. This is a weaker selection rule, not the absence of selection.",1.0,1.0,1.0,0.625,0,5,4,0,0.00512,improvement
+ablation_no_rollback,"Dev-regression rejection disabled: the best candidate by (train, dev, version) is accepted even when dev regresses. Selection is otherwise unchanged.",1.0,1.0,1.0,0.625,0,5,4,0,0.00527,improvement
+ablation_random_selection,Score-free selection: one candidate per generation is chosen by a seed-controlled RNG and accepted unconditionally; no train or dev score participates in the choice.,0.625,0.375,0.375,0.0,0,9,8,0,0.00494,flat

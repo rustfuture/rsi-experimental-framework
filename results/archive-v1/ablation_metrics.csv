@@ -1,0 +1,5 @@
+mode,final_train_acc,final_dev_acc,final_heldout_acc,heldout_gain,regression_count,accepted_count,runtime_seconds,outcome
+baseline_full,0.8125,0.625,0.75,0.375,0,3,0.00386,improvement
+ablation_no_mutation,0.625,0.375,0.375,0.0,0,1,0.00015,flat
+ablation_no_selection,0.8125,0.625,0.75,0.375,0,3,0.00382,improvement
+ablation_no_rollback,0.8125,0.625,0.75,0.375,0,3,0.00383,improvement

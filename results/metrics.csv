@@ -1,10 +1,10 @@
 generation,version,accepted,train_accuracy,dev_accuracy
 0,candidate-37b6efef5046,True,0.625,0.375
 1,candidate-0690ff52e16a,True,0.75,0.5
-2,candidate-f41795a16605,True,0.8125,0.625
-3,candidate-0c9b90149290,False,0.8125,0.625
-4,candidate-0c9b90149290,False,0.8125,0.625
-5,candidate-0c9b90149290,False,0.8125,0.625
-6,candidate-0c9b90149290,False,0.8125,0.625
-7,candidate-0c9b90149290,False,0.8125,0.625
-8,candidate-0c9b90149290,False,0.8125,0.625
+2,candidate-da153e0ba319,True,0.875,0.625
+3,candidate-e72f7ebf4635,True,0.9375,0.875
+4,candidate-9b822e7297ac,True,1.0,1.0
+5,candidate-3942687fb413,False,1.0,1.0
+6,candidate-3942687fb413,False,1.0,1.0
+7,candidate-3942687fb413,False,1.0,1.0
+8,candidate-3942687fb413,False,1.0,1.0

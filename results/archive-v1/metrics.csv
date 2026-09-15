@@ -1,0 +1,10 @@
+generation,version,accepted,train_accuracy,dev_accuracy
+0,candidate-37b6efef5046,True,0.625,0.375
+1,candidate-0690ff52e16a,True,0.75,0.5
+2,candidate-f41795a16605,True,0.8125,0.625
+3,candidate-0c9b90149290,False,0.8125,0.625
+4,candidate-0c9b90149290,False,0.8125,0.625
+5,candidate-0c9b90149290,False,0.8125,0.625
+6,candidate-0c9b90149290,False,0.8125,0.625
+7,candidate-0c9b90149290,False,0.8125,0.625
+8,candidate-0c9b90149290,False,0.8125,0.625
