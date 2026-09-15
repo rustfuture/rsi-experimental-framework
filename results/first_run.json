@@ -1,0 +1,348 @@
+{
+  "accepted_versions": [
+    "candidate-37b6efef5046",
+    "candidate-0690ff52e16a",
+    "candidate-f41795a16605"
+  ],
+  "baseline": {
+    "dev": {
+      "accuracy": 0.375,
+      "correct": 3,
+      "total": 8
+    },
+    "train": {
+      "accuracy": 0.625,
+      "correct": 10,
+      "total": 16
+    },
+    "version": "candidate-37b6efef5046"
+  },
+  "baseline_heldout": {
+    "accuracy": 0.375,
+    "correct": 3,
+    "total": 8
+  },
+  "config": {
+    "examples_per_pattern": 4,
+    "generations": 8,
+    "initial_bias": 0,
+    "initial_negative_keywords": [
+      "bad"
+    ],
+    "initial_positive_keywords": [
+      "good"
+    ],
+    "mutation_pool": [
+      "reliable",
+      "clear",
+      "safe",
+      "useful",
+      "risky",
+      "unclear",
+      "unsafe",
+      "harmful"
+    ],
+    "regression_tolerance": 0.0,
+    "seed": 20260915
+  },
+  "experiment": "deterministic-policy-mutation-harness",
+  "final": {
+    "dev": {
+      "accuracy": 0.625,
+      "correct": 5,
+      "total": 8
+    },
+    "heldout": {
+      "accuracy": 0.75,
+      "correct": 6,
+      "total": 8
+    },
+    "train": {
+      "accuracy": 0.8125,
+      "correct": 13,
+      "total": 16
+    },
+    "version": "candidate-f41795a16605"
+  },
+  "history": [
+    {
+      "accepted": true,
+      "decision": "baseline",
+      "dev": {
+        "accuracy": 0.375,
+        "correct": 3,
+        "total": 8
+      },
+      "generation": 0,
+      "mutation": "baseline",
+      "parent_version": null,
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad"
+        ],
+        "positive_keywords": [
+          "good"
+        ]
+      },
+      "train": {
+        "accuracy": 0.625,
+        "correct": 10,
+        "total": 16
+      },
+      "version": "candidate-37b6efef5046"
+    },
+    {
+      "accepted": true,
+      "decision": "accepted_improvement",
+      "dev": {
+        "accuracy": 0.5,
+        "correct": 4,
+        "total": 8
+      },
+      "generation": 1,
+      "mutation": "add_positive:useful",
+      "parent_version": "candidate-37b6efef5046",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad"
+        ],
+        "positive_keywords": [
+          "good",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.75,
+        "correct": 12,
+        "total": 16
+      },
+      "version": "candidate-0690ff52e16a"
+    },
+    {
+      "accepted": true,
+      "decision": "accepted_improvement",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 2,
+      "mutation": "add_positive:reliable",
+      "parent_version": "candidate-0690ff52e16a",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-f41795a16605"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 3,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 4,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 5,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 6,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 7,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    },
+    {
+      "accepted": false,
+      "decision": "flat_or_no_train_dev_gain",
+      "dev": {
+        "accuracy": 0.625,
+        "correct": 5,
+        "total": 8
+      },
+      "generation": 8,
+      "mutation": "add_negative:clear",
+      "parent_version": "candidate-f41795a16605",
+      "policy": {
+        "bias": 0,
+        "negative_keywords": [
+          "bad",
+          "clear"
+        ],
+        "positive_keywords": [
+          "good",
+          "reliable",
+          "useful"
+        ]
+      },
+      "train": {
+        "accuracy": 0.8125,
+        "correct": 13,
+        "total": 16
+      },
+      "version": "candidate-0c9b90149290"
+    }
+  ],
+  "limitations": [
+    "No LLM or paid API was used; mutation loop only validates harness mechanics.",
+    "Synthetic lexical task is not evidence of general self-improvement.",
+    "The held-out split is consulted only for the final measurement."
+  ],
+  "method_label": "HARNESS_BASELINE_NOT_LLM",
+  "outcome": "improvement",
+  "research_question": "Can a fixed base LLM-driven system improve held-out task performance through iterative candidate generation/evaluation/selection?",
+  "schema_version": 1,
+  "seed": 20260915,
+  "splits": {
+    "dev": 8,
+    "heldout": 8,
+    "train": 16
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "seed": 20260915,
+  "generations": 8,
+  "examples_per_pattern": 4,
+  "initial_positive_keywords": ["good"],
+  "initial_negative_keywords": ["bad"],
+  "initial_bias": 0,
+  "mutation_pool": ["reliable", "clear", "safe", "useful", "risky", "unclear", "unsafe", "harmful"],
+  "regression_tolerance": 0.0
+}
