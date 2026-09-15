@@ -356,7 +356,13 @@ def check_consistency(results_dir: Path, readme_path: Path | None = None) -> lis
     return problems
 
 
-def collect_provenance(results_dir: Path, config: dict, examples: list, command: str) -> dict:
+def collect_provenance(
+    results_dir: Path,
+    config: dict,
+    examples: list,
+    command: str,
+    seeds: list[int] | None = None,
+) -> dict:
     """Write provenance.json and return it. Not part of the byte-equality claim."""
 
     def _git(*args: str) -> str:
@@ -378,7 +384,15 @@ def collect_provenance(results_dir: Path, config: dict, examples: list, command:
         "command": command,
         "config": config,
         "config_hash": config_hash(config),
+        "config_seed": config.get("seed"),
+        "seeds": list(seeds) if seeds is not None else [config.get("seed")],
         "dataset_hash": dataset_hash(examples),
+        "dataset": {
+            "generator": "rsi_framework.core.make_dataset",
+            "examples_per_pattern": config.get("examples_per_pattern"),
+            "pool_size": len(examples),
+            "note": "Same fixed sentence pool for every seed; seeds only re-shuffle it.",
+        },
         "splits": {split: sum(e.split == split for e in examples) for split in ("train", "dev", "heldout")},
         "python": platform.python_version(),
         "platform": platform.platform(),

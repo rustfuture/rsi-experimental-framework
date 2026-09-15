@@ -1,4 +1,4 @@
 seed,final_train_acc,final_dev_acc,final_heldout_acc,heldout_gain,regression_count,accepted_baseline_included_count,accepted_new_change_count,rejected_proposal_count,runtime_seconds,artifact_hash,outcome
-42,1.0,1.0,1.0,0.5,0,5,4,0,0.00536,9771cfb4a95eca998659f5a20001c60ba140c58b411f9d43b78b10b34e3e4065,improvement
-1337,1.0,1.0,1.0,0.375,0,5,4,0,0.00507,fe667bc5dc5f7eecdebed93ddc62d474206f70fa400ae5c1fd91a188983dc07a,improvement
-2026,0.375,0.625,0.625,0.0,8,1,0,0,0.00723,c3c91b7451302adc23d11995834ebd4402fe367769765be49cb3bc5aef943adc,flat
+42,1.0,1.0,1.0,0.5,0,5,4,0,0.00529,9771cfb4a95eca998659f5a20001c60ba140c58b411f9d43b78b10b34e3e4065,improvement
+1337,1.0,1.0,1.0,0.375,0,5,4,0,0.005,fe667bc5dc5f7eecdebed93ddc62d474206f70fa400ae5c1fd91a188983dc07a,improvement
+2026,0.375,0.625,0.625,0.0,8,1,0,0,0.00673,c3c91b7451302adc23d11995834ebd4402fe367769765be49cb3bc5aef943adc,flat

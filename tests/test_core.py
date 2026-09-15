@@ -31,6 +31,7 @@ from rsi_framework.reporting import (
     README_BEGIN,
     README_END,
     check_consistency,
+    collect_provenance,
     load_artifacts,
     render_readme_results,
     render_report,
@@ -467,6 +468,24 @@ class HarnessTests(unittest.TestCase):
             stub.propose_keywords((), (), "task")
         self.assertIn("Colab L4", str(ctx.exception))
         self.assertIn("no inference", str(ctx.exception))
+
+    def test_provenance_records_run_context(self):
+        """Provenance must record commit, dirty state, hashes, seeds and the command."""
+        config = _config()
+        examples = make_dataset(int(config["seed"]))
+        with tempfile.TemporaryDirectory() as tmp:
+            provenance = collect_provenance(
+                Path(tmp), config, examples, "python -m rsi_framework test", seeds=[1, 2, 3]
+            )
+            self.assertTrue((Path(tmp) / "provenance.json").exists())
+        self.assertEqual(provenance["seeds"], [1, 2, 3])
+        self.assertEqual(provenance["config_seed"], config["seed"])
+        self.assertEqual(len(provenance["config_hash"]), 64)
+        self.assertEqual(len(provenance["dataset_hash"]), 64)
+        self.assertIn("source_commit", provenance)
+        self.assertIn("source_dirty_file_count", provenance)
+        self.assertEqual(provenance["dataset"]["pool_size"], len(examples))
+        self.assertEqual(provenance["command"], "python -m rsi_framework test")
 
     def test_report_numbers_match_artifacts(self):
         """Report/README numbers are generated from results/*.json and must not drift."""

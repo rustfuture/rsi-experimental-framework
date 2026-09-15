@@ -72,11 +72,14 @@ def main(argv: list[str] | None = None) -> None:
     result = run_experiment(config, args.output, candidate_generator=generator)
 
     multi_seed_summary = None
+    recorded_seeds = [int(config["seed"])]
     if args.seeds:
         seed_list = [int(s.strip()) for s in args.seeds.split(",") if s.strip()]
         multi_seed_summary = run_multi_seed_experiment(config, seeds=seed_list, output_dir=args.output)
+        recorded_seeds = seed_list
     elif args.run_all_benchmarks:
-        multi_seed_summary = run_multi_seed_experiment(config, seeds=[42, 1337, 2026], output_dir=args.output)
+        recorded_seeds = [42, 1337, 2026]
+        multi_seed_summary = run_multi_seed_experiment(config, seeds=recorded_seeds, output_dir=args.output)
 
     ablation_summary = None
     if args.run_all_benchmarks:
@@ -85,7 +88,11 @@ def main(argv: list[str] | None = None) -> None:
     # Provenance records the checkout state and is not part of the byte-equality claim.
     examples = make_dataset(int(config["seed"]), int(config.get("examples_per_pattern", 4)))
     collect_provenance(
-        args.output, config, examples, command="python -m rsi_framework " + " ".join(sys.argv[1:])
+        args.output,
+        config,
+        examples,
+        command="python -m rsi_framework " + " ".join(sys.argv[1:]),
+        seeds=recorded_seeds,
     )
 
     # report.md is always rendered from the artifacts on disk, never hand-edited.

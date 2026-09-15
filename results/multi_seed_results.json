@@ -67,7 +67,7 @@
       "outcome": "improvement",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00536,
+      "runtime_seconds": 0.00529,
       "seed": 42,
       "train_total": 16
     },
@@ -92,7 +92,7 @@
       "outcome": "improvement",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00507,
+      "runtime_seconds": 0.005,
       "seed": 1337,
       "train_total": 16
     },
@@ -117,15 +117,15 @@
       "outcome": "flat",
       "regression_count": 8,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00723,
+      "runtime_seconds": 0.00673,
       "seed": 2026,
       "train_total": 16
     }
   ],
   "runtime_seconds": {
-    "mean": 0.0059,
+    "mean": 0.0057,
     "n": 3,
-    "std": 0.0012,
+    "std": 0.0009,
     "stdev_ddof": 1
   },
   "same_synthetic_pool_across_seeds": true,

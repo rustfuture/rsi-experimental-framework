@@ -33,7 +33,7 @@
       "outcome": "improvement",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00526,
+      "runtime_seconds": 0.00507,
       "seed": 20260915
     },
     {
@@ -73,7 +73,7 @@
       "outcome": "improvement",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00511,
+      "runtime_seconds": 0.00512,
       "seed": 20260915
     },
     {
@@ -93,7 +93,7 @@
       "outcome": "improvement",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00545,
+      "runtime_seconds": 0.00527,
       "seed": 20260915
     },
     {
@@ -113,7 +113,7 @@
       "outcome": "flat",
       "regression_count": 0,
       "rejected_proposal_count": 0,
-      "runtime_seconds": 0.00515,
+      "runtime_seconds": 0.00494,
       "seed": 20260915
     }
   ]
