@@ -1,0 +1,4 @@
+seed,final_train_acc,final_dev_acc,final_heldout_acc,heldout_gain,regression_count,accepted_count,runtime_seconds,artifact_hash,outcome
+42,0.6875,1.0,0.625,0.125,0,3,0.00391,6705b9bb31491fc4b5d7d74572a0a4b4680c89097288651e3c08f22a6213ec6b,improvement
+1337,0.8125,0.625,0.75,0.125,6,3,0.00384,904cbbe4503357a879a8cb15de2f3424a92f5c97cf71a155dfa6f6ac48cc15de,improvement
+2026,0.375,0.625,0.625,0.0,8,1,0.00398,c64292f6c0bc82f52c9c8de06306a1a8b1389b8afcad28499b12a7d7be0065f4,flat
