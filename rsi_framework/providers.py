@@ -268,6 +268,22 @@ class LocalTransformersProvider(OpenWeightLLMProvider):
         self._model_name = model_name
         self._device = device
         
+
+        if device.startswith("cuda"):
+            try:
+                import torch
+                if not torch.cuda.is_available():
+                    raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: Requested device {device} is not available")
+            except ImportError:
+                pass
+        elif device == "mps":
+            try:
+                import torch
+                if not torch.backends.mps.is_available():
+                    raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: Requested device {device} is not available")
+            except ImportError:
+                pass
+
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
