@@ -1,5 +1,5 @@
 {
-  "command": "python -m rsi_framework --run-all-benchmarks --output results --readme README.md",
+  "command": "python -m rsi_framework --run-all-benchmarks",
   "config": {
     "examples_per_pattern": 4,
     "generations": 8,
@@ -42,17 +42,19 @@
     1337,
     2026
   ],
-  "source_commit": "cd6560a3672e1eef845ddaf8ab67876ef70e278d",
+  "source_commit": "471b627f026ff5bb984ebb333cb2b6bcd277f298",
   "source_dirty": true,
-  "source_dirty_file_count": 7,
+  "source_dirty_file_count": 9,
   "source_dirty_files": [
     "M results/ablation_metrics.csv",
     " M results/ablation_results.json",
     " M results/multi_seed_metrics.csv",
     " M results/multi_seed_results.json",
     " M rsi_framework/cli.py",
-    " M rsi_framework/reporting.py",
-    " M tests/test_core.py"
+    " M rsi_framework/providers.py",
+    "?? patch_cli.py",
+    "?? test_script.py",
+    "?? tests/test_llm_provider.py"
   ],
   "splits": {
     "dev": 8,

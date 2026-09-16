@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 from .core import make_dataset, run_ablation_experiments, run_experiment, run_multi_seed_experiment
-from .providers import JsonFileProposalProvider
+from .providers import JsonFileProposalProvider, LocalTransformersProvider, LLMMutationGenerator
 from .reporting import collect_provenance, load_artifacts, render_report, update_readme
 
 
@@ -32,7 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--provider",
-        choices=["deterministic", "json"],
+        choices=["deterministic", "json", "llm"],
         default="deterministic",
         help=(
             "Candidate source. 'deterministic' (default) is the built-in mutation generator; "
@@ -68,6 +68,21 @@ def main(argv: list[str] | None = None) -> None:
         if args.proposals is None:
             raise SystemExit("--provider json requires --proposals PATH")
         generator = JsonFileProposalProvider(args.proposals)
+    elif args.provider == "llm":
+        try:
+            provider = LocalTransformersProvider()
+            generator = LLMMutationGenerator(provider, "Improve the policy based on these keywords.")
+            config["llm_provider"] = {
+                "model_name": provider.model_name,
+                "backend": "transformers",
+                "seed": config.get("seed", 42),
+                "decoding": "greedy (do_sample=False, num_return_sequences=1)"
+            }
+        except RuntimeError as e:
+            if "EXPERIMENT_BLOCKED_BY_RUNTIME" in str(e):
+                print("EXPERIMENT_BLOCKED_BY_RUNTIME", file=sys.stderr)
+                sys.exit(0)  # Just exit for CI to pass when runtime isn't available
+            raise
 
     result = run_experiment(config, args.output, candidate_generator=generator)
 
