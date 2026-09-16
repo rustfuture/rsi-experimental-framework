@@ -22,15 +22,14 @@
 
 <p align="center"><em>Open-weight experiment notebook (optional GPU path)</em></p>
 
-This repository is the experimental accounting and verification substrate for one
-question:
+This repository tests one narrow question:
 
 > Can a fixed base model improve held-out task performance through iterative
 > candidate generation, evaluation, and selection?
 
-It provides a deterministic harness baseline, an injectable and validated provider
-boundary, immutable candidate lineage, strict held-out isolation, and committed,
-re-derivable artifacts. It does not claim that any of this produces intelligence.
+The framework provides a deterministic baseline, validated provider inputs,
+candidate lineage, held-out isolation, and reproducible artifacts. It makes no
+claim that this produces intelligence.
 
 ## At a Glance
 
@@ -152,7 +151,7 @@ All raw and machine-readable data live under [`results/`](results/):
 
 ## Optional Local Model Provider
 
-Implementation status, stated precisely:
+Implementation status:
 
 - **Implemented.** `LocalTransformersProvider` (`rsi_framework/providers.py`) loads
   `--model` with HuggingFace Transformers on a validated `--device`;
@@ -162,7 +161,7 @@ Implementation status, stated precisely:
   page is the deterministic baseline (`HARNESS_BASELINE_NOT_LLM`). No intelligence
   improvement is claimed for the toy baseline or for the unrecorded provider path.
 
-Every proposal from every provider still passes through the central
+Every proposal from every provider passes through the central
 `validate_proposal` gate before scoring: no-ops, multi-element edits,
 out-of-vocabulary or malformed keywords, keywords shared across polarities, and
 out-of-bound bias are rejected.
