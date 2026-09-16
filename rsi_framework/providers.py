@@ -261,36 +261,96 @@ class OpenWeightColabL4Stub(OpenWeightLLMProvider):
             f"proposals through JsonFileProposalProvider. No paid APIs are used."
         )
 
+def resolve_device(requested: str) -> str:
+    """Resolve a requested compute device without silently substituting another.
+
+    ``"auto"`` is the only value that chooses for the caller: it prefers CUDA,
+    then Apple MPS, then CPU. Every other value is treated as an explicit
+    request and is validated. If the requested device (or CUDA index) is
+    unavailable, or if the device string is not a real torch device, this raises
+    a clear ``EXPERIMENT_BLOCKED_BY_RUNTIME`` error instead of quietly falling
+    back to a different device.
+    """
+    if not isinstance(requested, str) or not requested.strip():
+        raise RuntimeError("EXPERIMENT_BLOCKED_BY_RUNTIME: --device must be a non-empty string")
+    requested = requested.strip()
+
+    try:
+        import torch
+    except ImportError:
+        # "auto" can only fall back to CPU because no accelerator can be
+        # detected without torch; an explicit non-CPU request still fails.
+        if requested in ("cpu", "auto"):
+            return "cpu"
+        raise RuntimeError(
+            f"EXPERIMENT_BLOCKED_BY_RUNTIME: torch is not installed, so requested device "
+            f"{requested!r} cannot be honored"
+        )
+
+    if requested == "auto":
+        if torch.cuda.is_available():
+            return "cuda"
+        mps = getattr(torch.backends, "mps", None)
+        if mps is not None and mps.is_available():
+            return "mps"
+        return "cpu"
+
+    try:
+        device = torch.device(requested)
+    except (RuntimeError, ValueError) as exc:
+        raise RuntimeError(
+            f"EXPERIMENT_BLOCKED_BY_RUNTIME: unsupported device {requested!r}"
+        ) from exc
+
+    if device.type == "cpu":
+        return "cpu"
+    if device.type == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                f"EXPERIMENT_BLOCKED_BY_RUNTIME: requested device {requested!r} is not available"
+            )
+        index = device.index if device.index is not None else torch.cuda.current_device()
+        if index >= torch.cuda.device_count():
+            raise RuntimeError(
+                f"EXPERIMENT_BLOCKED_BY_RUNTIME: requested device {requested!r} is not available "
+                f"({torch.cuda.device_count()} CUDA device(s) visible)"
+            )
+        return requested
+    if device.type == "mps":
+        mps = getattr(torch.backends, "mps", None)
+        if mps is None or not mps.is_available():
+            raise RuntimeError(
+                f"EXPERIMENT_BLOCKED_BY_RUNTIME: requested device {requested!r} is not available"
+            )
+        return requested
+    raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: unsupported device {requested!r}")
+
+
 class LocalTransformersProvider(OpenWeightLLMProvider):
     """Local open-weight provider using HuggingFace Transformers."""
 
-    def __init__(self, model_name: str = "meta-llama/Llama-3.1-8B-Instruct", device: str = "cuda:0"):
+    def __init__(self, model_name: str = "meta-llama/Llama-3.1-8B-Instruct", device: str = "auto"):
         self._model_name = model_name
-        self._device = device
-        
-
-        if device.startswith("cuda"):
-            try:
-                import torch
-                if not torch.cuda.is_available():
-                    raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: Requested device {device} is not available")
-            except ImportError:
-                pass
-        elif device == "mps":
-            try:
-                import torch
-                if not torch.backends.mps.is_available():
-                    raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: Requested device {device} is not available")
-            except ImportError:
-                pass
+        self._requested_device = device
+        # Resolve/validate the device before loading any weights. This never
+        # substitutes a different device for an explicit request.
+        self._device = resolve_device(device)
 
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
             self._tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self._model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+            self._model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(self._device)
         except Exception as e:
             raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: {e}")
+
+    @property
+    def requested_device(self) -> str:
+        return self._requested_device
+
+    @property
+    def device(self) -> str:
+        return self._device
 
     @property
     def model_name(self) -> str:

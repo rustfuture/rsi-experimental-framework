@@ -1,5 +1,5 @@
 import unittest
-from rsi_framework.providers import LLMMutationGenerator, ProposalError
+from rsi_framework.providers import LLMMutationGenerator, ProposalError, resolve_device
 from rsi_framework.core import Candidate, Policy
 
 class MockProvider:
@@ -47,6 +47,42 @@ class LLMMutationGeneratorTests(unittest.TestCase):
         with self.assertRaises(RuntimeError) as cm:
             gen.generate(self.current, 1, 42)
         self.assertIn("EXPERIMENT_BLOCKED_BY_RUNTIME", str(cm.exception))
+
+class DeviceResolutionTests(unittest.TestCase):
+    """`--device` is explicit: an unavailable request must fail, never fall back."""
+
+    def test_cpu_is_always_accepted(self):
+        self.assertEqual(resolve_device("cpu"), "cpu")
+
+    def test_auto_selects_a_real_device(self):
+        self.assertIn(resolve_device("auto"), {"cpu", "cuda", "mps"})
+
+    def test_unknown_device_fails_clearly(self):
+        with self.assertRaises(RuntimeError) as cm:
+            resolve_device("not-a-real-device")
+        self.assertIn("EXPERIMENT_BLOCKED_BY_RUNTIME", str(cm.exception))
+        self.assertIn("not-a-real-device", str(cm.exception))
+
+    def test_blank_device_fails_clearly(self):
+        with self.assertRaises(RuntimeError) as cm:
+            resolve_device("   ")
+        self.assertIn("EXPERIMENT_BLOCKED_BY_RUNTIME", str(cm.exception))
+
+    def test_unavailable_explicit_device_fails_without_fallback(self):
+        try:
+            import torch
+        except ImportError:
+            with self.assertRaises(RuntimeError) as cm:
+                resolve_device("cuda")
+            self.assertIn("EXPERIMENT_BLOCKED_BY_RUNTIME", str(cm.exception))
+            return
+        if not torch.cuda.is_available():
+            with self.assertRaises(RuntimeError) as cm:
+                resolve_device("cuda")
+            self.assertIn("EXPERIMENT_BLOCKED_BY_RUNTIME", str(cm.exception))
+        else:
+            self.assertEqual(resolve_device("cuda"), "cuda")
+
 
 if __name__ == "__main__":
     unittest.main()
