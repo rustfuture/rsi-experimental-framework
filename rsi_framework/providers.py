@@ -260,3 +260,155 @@ class OpenWeightColabL4Stub(OpenWeightLLMProvider):
             f"use DeterministicMutationGenerator (method_label: HARNESS_BASELINE_NOT_LLM) or supply "
             f"proposals through JsonFileProposalProvider. No paid APIs are used."
         )
+
+class LocalTransformersProvider(OpenWeightLLMProvider):
+    """Local open-weight provider using HuggingFace Transformers."""
+
+    def __init__(self, model_name: str = "meta-llama/Llama-3.1-8B-Instruct", device: str = "cuda:0"):
+        self._model_name = model_name
+        self._device = device
+        
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            self._tokenizer = AutoTokenizer.from_pretrained(model_name)
+            self._model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        except Exception as e:
+            raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: {e}")
+
+    @property
+    def model_name(self) -> str:
+        return self._model_name
+
+    @property
+    def is_deterministic(self) -> bool:
+        return True
+
+    def propose_keywords(
+        self,
+        current_positive: tuple[str, ...],
+        current_negative: tuple[str, ...],
+        task_prompt: str,
+        n_proposals: int = 4,
+        seed: int = 42,
+    ) -> list[tuple[str, str]]:
+        try:
+            import torch
+        except ImportError as e:
+            raise RuntimeError(f"EXPERIMENT_BLOCKED_BY_RUNTIME: {e}")
+
+        prompt = (
+            f"Task: {task_prompt}\n"
+            f"Current positive keywords: {', '.join(current_positive) if current_positive else 'none'}\n"
+            f"Current negative keywords: {', '.join(current_negative) if current_negative else 'none'}\n"
+            f"Propose exactly {n_proposals} keyword changes to improve accuracy.\n"
+            "Format your output as a list of actions and keywords, one per line:\n"
+            "add_positive: word\n"
+            "add_negative: word\n"
+            "remove_positive: word\n"
+            "remove_negative: word\n"
+            "bias_up: bias_up\n"
+            "bias_down: bias_down\n"
+        )
+        
+        inputs = self._tokenizer(prompt, return_tensors="pt").to(self._device)
+        torch.manual_seed(seed)
+        
+        with torch.no_grad():
+            outputs = self._model.generate(
+                **inputs, 
+                max_new_tokens=100, 
+                do_sample=False,
+                num_return_sequences=1
+            )
+            
+        result_text = self._tokenizer.decode(outputs[0][inputs.input_ids.shape[-1]:], skip_special_tokens=True)
+        
+        proposals = []
+        for line in result_text.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split(":")
+            if len(parts) == 2:
+                action, keyword = parts[0].strip(), parts[1].strip()
+                proposals.append((action, keyword))
+                if len(proposals) == n_proposals:
+                    break
+        return proposals
+
+
+class LLMMutationGenerator(BaseCandidateGenerator):
+    """Generate candidates using an OpenWeightLLMProvider."""
+
+    def __init__(self, provider: OpenWeightLLMProvider, task_prompt: str):
+        self.provider = provider
+        self.task_prompt = task_prompt
+        self.rejections: list[dict] = []
+
+    @property
+    def generator_type(self) -> str:
+        return f"llm_mutation:{self.provider.model_name}"
+
+    def generate(self, current: "Candidate", generation: int, seed: int) -> list["Candidate"]:
+        from .core import Candidate, Policy
+        self.rejections = []
+        try:
+            proposals = self.provider.propose_keywords(
+                current.policy.positive_keywords,
+                current.policy.negative_keywords,
+                self.task_prompt,
+                seed=seed,
+            )
+        except Exception as e:
+            if "EXPERIMENT_BLOCKED_BY_RUNTIME" in str(e):
+                raise
+            self.rejections.append({
+                "event_id": f"g{generation}-err",
+                "generation": generation,
+                "reason": f"provider_failed: {e}"
+            })
+            return []
+
+        candidates = []
+        for index, (action, keyword) in enumerate(proposals):
+            pos = set(current.policy.positive_keywords)
+            neg = set(current.policy.negative_keywords)
+            bias = current.policy.bias
+
+            if action == "add_positive":
+                pos.add(keyword)
+                neg.discard(keyword)
+            elif action == "remove_positive":
+                pos.discard(keyword)
+            elif action == "add_negative":
+                neg.add(keyword)
+                pos.discard(keyword)
+            elif action == "remove_negative":
+                neg.discard(keyword)
+            elif action == "bias_up":
+                bias += 1
+            elif action == "bias_down":
+                bias -= 1
+            else:
+                self.rejections.append({
+                    "event_id": f"g{generation}-c{index}",
+                    "generation": generation,
+                    "reason": f"invalid_action: {action}"
+                })
+                continue
+            
+            # Remove empty strings if they creep in
+            pos = {p for p in pos if p}
+            neg = {p for p in neg if p}
+
+            policy = Policy(tuple(sorted(pos)), tuple(sorted(neg)), bias)
+            candidates.append(Candidate(
+                policy=policy,
+                generation=generation,
+                parent_version=current.version,
+                mutation=f"{action}:{keyword}",
+                event_id=f"g{generation}-c{index}"
+            ))
+
+        return candidates
