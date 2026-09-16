@@ -10,6 +10,7 @@ from .reporting import collect_provenance, load_artifacts, render_report, update
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the deterministic RSI harness baseline")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.1-8B-Instruct", help="Model ID for LLM provider")
     parser.add_argument("--config", type=Path, default=Path("config/default.json"))
     parser.add_argument("--output", type=Path, default=Path("results"))
     parser.add_argument("--seeds", type=str, default=None, help="Comma-separated list of seeds (e.g. 42,1337,2026)")
@@ -70,7 +71,7 @@ def main(argv: list[str] | None = None) -> None:
         generator = JsonFileProposalProvider(args.proposals)
     elif args.provider == "llm":
         try:
-            provider = LocalTransformersProvider()
+            provider = LocalTransformersProvider(model_name=args.model)
             generator = LLMMutationGenerator(provider, "Improve the policy based on these keywords.")
             config["llm_provider"] = {
                 "model_name": provider.model_name,
@@ -81,7 +82,7 @@ def main(argv: list[str] | None = None) -> None:
         except RuntimeError as e:
             if "EXPERIMENT_BLOCKED_BY_RUNTIME" in str(e):
                 print("EXPERIMENT_BLOCKED_BY_RUNTIME", file=sys.stderr)
-                sys.exit(0)  # Just exit for CI to pass when runtime isn't available
+                sys.exit(1)
             raise
 
     result = run_experiment(config, args.output, candidate_generator=generator)

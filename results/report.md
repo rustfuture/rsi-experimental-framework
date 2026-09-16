@@ -6,9 +6,9 @@
 
 ## 0. Provenance and Scope
 
-- Source commit at generation time: `471b627f026ff5bb984ebb333cb2b6bcd277f298`
-- Working tree dirty at generation time: `True` (9 changed paths, listed in `provenance.json`; this normally includes the artifacts written by this very run)
-- Run command: `python -m rsi_framework --run-all-benchmarks`
+- Source commit at generation time: `cd6560a3672e1eef845ddaf8ab67876ef70e278d`
+- Working tree dirty at generation time: `True` (7 changed paths, listed in `provenance.json`; this normally includes the artifacts written by this very run)
+- Run command: `python -m rsi_framework --run-all-benchmarks --output results --readme README.md`
 - Config hash: `1015a828f8f5f9ee45cdbb4027f5b9cc28d2b4964c29929c8bdf03518d538e9a`
 - Dataset hash: `accb9de6e25fcbfaf573ab52122c88e004aeba1895f05a6208179e8a70996466`
 - Python: `3.14.5`
@@ -43,7 +43,7 @@ N = 3 seeds; 16 train / 8 dev / 8 held-out examples per run. `mean ± std` uses 
 
 | Seed | Train (n) | Dev (n) | Held-out (n) | Held-out correct | Gain | Rejected regressions | Accepted incl. baseline | Accepted new | Runtime (s) | Outcome |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| 42 | 1.000 (16) | 1.000 (8) | 1.000 (8) | 8/8 | +0.500 | 0 | 5 | 4 | 0.0052 | improvement |
+| 42 | 1.000 (16) | 1.000 (8) | 1.000 (8) | 8/8 | +0.500 | 0 | 5 | 4 | 0.0053 | improvement |
 | 1337 | 1.000 (16) | 1.000 (8) | 1.000 (8) | 8/8 | +0.375 | 0 | 5 | 4 | 0.0050 | improvement |
 | 2026 | 0.375 (16) | 0.625 (8) | 0.625 (8) | 5/8 | +0.000 | 8 | 1 | 0 | 0.0067 | flat |
 
