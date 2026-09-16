@@ -1,9 +1,7 @@
+<h1 align="center">RSI Experimental Framework</h1>
 <p align="center">
-  <h1 align="center">RSI Experimental Framework</h1>
-  <p align="center">
-    Controlled infrastructure for studying iterative, model-guided candidate
-    generation, evaluation, and selection — with deterministic accounting.
-  </p>
+  Controlled infrastructure for studying iterative, model-guided candidate
+  generation, evaluation, and selection — with deterministic accounting.
 </p>
 
 <p align="center">
