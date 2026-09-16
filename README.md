@@ -15,7 +15,7 @@ The first milestone is deliberately a **deterministic harness baseline, not an L
 3. **Scoped Byte-Level Reproducibility**: With an identical config and seed, `first_run.json`, `history.jsonl`, `metrics.csv`, and `progress.svg` are byte-for-byte identical. Artifacts that embed `runtime_seconds` (`multi_seed_*`, `ablation_*`, `report.md`) are numerically reproducible but not byte-reproducible, and `provenance.json` records the checkout state by design.
 4. **Multi-Seed Replay**: `--seeds 42,1337,2026` records train/dev/held-out accuracy, rejection counts, accepted counts, runtime, and SHA-256 digests. Aggregates are reported as mean ± sample standard deviation (`ddof=1`) with explicit seed count and per-split sample sizes. Every seed re-shuffles **the same** 32-sentence synthetic pool, so these are replays of one toy dataset, not independent real-world samples.
 5. **Ablation Suite**: `ablation_no_mutation`, `ablation_no_selection` (dev-blind greedy selection — still score-based), `ablation_no_rollback`, and `ablation_random_selection` (the genuine score-free control). Each run records which mechanism it switches off and is executed with the same seed, dataset hash, and proposal budget.
-6. **Injectable, Validated Provider Boundary**: `run_experiment(..., candidate_generator=...)` replaces the built-in mutation generator without touching the loop. `JsonFileProposalProvider` reads externally produced proposals and every proposal is checked by `validate_proposal` (single edit, allowed vocabulary, no shared polarity, bounded bias) before it can be scored. `OpenWeightColabL4Stub` is an unwired boundary marker, **not** a completed model integration: no LLM has been run here.
+6. **Injectable, Validated Provider Boundary**: `run_experiment(..., candidate_generator=...)` replaces the built-in mutation generator without touching the loop. `JsonFileProposalProvider` reads externally produced proposals, and `LocalTransformersProvider` runs a local HuggingFace Transformers model as an optional candidate source (`--provider llm`). Every proposal from every source is checked by `validate_proposal` (single edit, allowed vocabulary, no shared polarity, bounded bias) before it can be scored. `OpenWeightColabL4Stub` remains a historical boundary marker that intentionally raises; it is no longer the only open-weight path.
 
 ### Exact Reproduction Commands
 
@@ -89,13 +89,34 @@ All raw and machine-readable data are recorded under [`results/`](results/):
 - [`results/progress.svg`](results/progress.svg): Dev accuracy trajectory (deterministic).
 - [`results/archive-v1/`](results/archive-v1/): Superseded v1 (substring-matching) artifacts, preserved verbatim.
 
+## Second Milestone: Optional Local Model Provider (Implementation Complete)
+
+A real optional local open-weight provider is now implemented:
+
+- `LocalTransformersProvider` (`rsi_framework/providers.py`) loads `--model` with HuggingFace Transformers on a validated `--device`.
+- `LLMMutationGenerator` converts provider output into candidate policies.
+- CLI support: `--provider llm`, `--model`, and `--device`.
+
+Status, stated precisely:
+
+- **Implementation complete.** The provider, the generator, and the CLI wiring exist and are covered by boundary tests. Device selection is explicit and validated: an unavailable runtime (`torch`/`transformers`) or an unavailable requested device exits with `EXPERIMENT_BLOCKED_BY_RUNTIME` instead of silently substituting another device.
+- **No real-model RSI experiment has been run or recorded.** Every result in `results/` is the deterministic harness baseline (`HARNESS_BASELINE_NOT_LLM`); none was produced by a language model. No intelligence improvement is claimed for the deterministic toy baseline, and none is claimed for the unrecorded provider path.
+
+Every proposal from every provider is still passed through the central `validate_proposal` gate before it can be scored: no-ops, multi-element edits, out-of-vocabulary or malformed keywords, keywords shared across polarities, and out-of-bound bias are rejected.
+
+Invocation example (requires `torch` and `transformers` installed in the active environment; the deterministic baseline does not):
+
+```bash
+python3 -m rsi_framework --provider llm --model <MODEL_ID> --device auto
+```
+
 ## Limitations & Scientific Boundary
 
 - **Harness Validation, Not Intelligence**: The mutation search loop validates search state accounting, rejection mechanics, and split containment. It does not establish general reasoning, emergence, or unbounded self-improvement.
 - **`improvement` / `flat` / `regression` Are Operational Labels**: They come from one held-out comparison with a fixed tolerance on one run. They are not statistical significance, an equivalence proof, or a confidence-interval barrier.
 - **Tiny Held-out Split**: Each run measures 8 held-out examples, so a single example moves accuracy by 0.125. Do not read a research result out of 8 examples.
 - **Lexical Synthetic Data**: The 8-concept synthetic sentence pool is shared by every seed (seeds re-shuffle it), so multi-seed runs are replays of one toy dataset, not independent real-world samples.
-- **Provider Boundary**: `JsonFileProposalProvider` and the `candidate_generator` injection point are wired and validated, but no language model has been run. `OpenWeightColabL4Stub` intentionally raises; it is a boundary marker, not a finished integration.
+- **Provider Boundary**: `JsonFileProposalProvider`, the `candidate_generator` injection point, and an optional local `LocalTransformersProvider` (`--provider llm`) are implemented, and every proposal is validated by `validate_proposal`. **No real-model RSI experiment has been run and recorded**, so the empirical results on this page are deterministic-baseline only. `OpenWeightColabL4Stub` remains a historical boundary marker that intentionally raises.
 - **Zero Paid APIs**: No cloud LLM APIs (OpenAI, Anthropic, etc.) are used or required.
 
 See [`DESIGN.md`](DESIGN.md) for the falsifiable hypotheses, mechanics, and literature citations.

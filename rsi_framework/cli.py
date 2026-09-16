@@ -4,12 +4,23 @@ import sys
 from pathlib import Path
 
 from .core import make_dataset, run_ablation_experiments, run_experiment, run_multi_seed_experiment
-from .providers import JsonFileProposalProvider
+from .providers import JsonFileProposalProvider, LocalTransformersProvider, LLMMutationGenerator
 from .reporting import collect_provenance, load_artifacts, render_report, update_readme
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the deterministic RSI harness baseline")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-3.1-8B-Instruct", help="Model ID for the --provider llm local model")
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="auto",
+        help=(
+            "Compute device for --provider llm: 'auto' (CUDA, then MPS, then CPU), 'cpu', "
+            "'cuda', 'cuda:N', or 'mps'. An explicitly requested device that is unavailable "
+            "fails instead of falling back to another device."
+        ),
+    )
     parser.add_argument("--config", type=Path, default=Path("config/default.json"))
     parser.add_argument("--output", type=Path, default=Path("results"))
     parser.add_argument("--seeds", type=str, default=None, help="Comma-separated list of seeds (e.g. 42,1337,2026)")
@@ -32,12 +43,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--provider",
-        choices=["deterministic", "json"],
+        choices=["deterministic", "json", "llm"],
         default="deterministic",
         help=(
-            "Candidate source. 'deterministic' (default) is the built-in mutation generator; "
-            "'json' reads externally produced proposals from --proposals and validates each one. "
-            "Neither option runs an LLM."
+            "Candidate source. 'deterministic' (default) is the built-in mutation generator: "
+            "no model, no network, no API cost. 'json' reads externally produced proposals from "
+            "--proposals and validates each one without running a model. 'llm' DOES run an LLM: "
+            "it loads --model with local HuggingFace Transformers on --device (no paid API)."
         ),
     )
     parser.add_argument(
@@ -68,6 +80,21 @@ def main(argv: list[str] | None = None) -> None:
         if args.proposals is None:
             raise SystemExit("--provider json requires --proposals PATH")
         generator = JsonFileProposalProvider(args.proposals)
+    elif args.provider == "llm":
+        try:
+            provider = LocalTransformersProvider(model_name=args.model, device=args.device)
+            generator = LLMMutationGenerator(provider, "Improve the policy based on these keywords.")
+            config["llm_provider"] = {
+                "model_name": provider.model_name,
+                "backend": "transformers",
+                "seed": config.get("seed", 42),
+                "decoding": "greedy (do_sample=False, num_return_sequences=1)"
+            }
+        except RuntimeError as e:
+            if "EXPERIMENT_BLOCKED_BY_RUNTIME" in str(e):
+                print("EXPERIMENT_BLOCKED_BY_RUNTIME", file=sys.stderr)
+                sys.exit(1)
+            raise
 
     result = run_experiment(config, args.output, candidate_generator=generator)
 
