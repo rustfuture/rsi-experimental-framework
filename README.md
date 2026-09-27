@@ -1,15 +1,18 @@
-<h1 align="center">RSI Experimental Framework</h1>
-<p align="center">
-  Controlled infrastructure for studying iterative, model-guided candidate
-  generation, evaluation, and selection — with deterministic accounting.
-</p>
+# RSI Experimental Framework
 
-<p align="center">
-  <a href="https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square">
-  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green?style=flat-square"></a>
-  <a href="https://colab.research.google.com/github/rustfuture/rsi-experimental-framework/blob/main/notebooks/rsi_open_weight_colab.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"></a>
-</p>
+A controlled experimental testbed for AI researchers and engineers studying iterative candidate generation, evaluation, and selection with deterministic accounting.
+
+[![CI](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rustfuture/rsi-experimental-framework/blob/main/notebooks/rsi_open_weight_colab.ipynb)
+
+**Status**: Research prototype / experimental harness (deterministic baseline validated; candidate lineage and held-out isolation verified; local LLM provider interface implemented; real-model self-improvement evidence not yet recorded).
+
+- **Iterative candidate search**: Generates, evaluates, and selects keyword-policy mutations over a fixed 32-sentence synthetic classification pool.
+- **Strict validation gate**: Validates proposals via `validate_proposal` (single-token mutation, allowed vocabulary, disjoint polarities, bounded bias) before scoring.
+- **Lineage tracking and regression rejection**: Records candidate parentage with immutable event IDs and rejects candidate mutations that cause dev-set accuracy regressions.
+- **Held-out isolation**: Evaluates the held-out split strictly once post-selection, preventing test data leakage into candidate generation or selection.
+- **Reproducible empirical accounting**: Produces byte-identical canonical artifacts (`first_run.json`, `history.jsonl`, `metrics.csv`, `progress.svg`) and numerically verified reports (`report.md`).
 
 <p align="center">
   <a href="#at-a-glance">At a Glance</a> ·
@@ -20,8 +23,6 @@
   <a href="#limitations">Limitations</a>
 </p>
 
-<p align="center"><em>Open-weight experiment notebook (optional GPU path)</em></p>
-
 This repository tests one narrow question:
 
 > Can a fixed base model improve held-out task performance through iterative
@@ -30,6 +31,7 @@ This repository tests one narrow question:
 The framework provides a deterministic baseline, validated provider inputs,
 candidate lineage, held-out isolation, and reproducible artifacts. It makes no
 claim that this produces intelligence.
+
 
 ## At a Glance
 
