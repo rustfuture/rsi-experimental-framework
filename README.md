@@ -1,48 +1,73 @@
 # RSI Experimental Framework
 
-A controlled experimental testbed for AI researchers and engineers studying iterative candidate generation, evaluation, and selection with deterministic accounting.
+This software tests systems that repeatedly change their own methods by improving text classification rules through repeated trials.
 
 [![CI](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rustfuture/rsi-experimental-framework/blob/main/notebooks/rsi_open_weight_colab.ipynb)
 
-**Status**: Research prototype / experimental harness (deterministic baseline validated; candidate lineage and held-out isolation verified; local LLM provider interface implemented; real-model self-improvement evidence not yet recorded).
+**Status:** Research prototype; deterministic baseline validated, no real-model evidence yet.
 
-- **Iterative candidate search**: Generates, evaluates, and selects keyword-policy mutations over a fixed 32-sentence synthetic classification pool.
-- **Strict validation gate**: Validates proposals via `validate_proposal` (single-token mutation, allowed vocabulary, disjoint polarities, bounded bias) before scoring.
-- **Lineage tracking and regression rejection**: Records candidate parentage with immutable event IDs and rejects candidate mutations that cause dev-set accuracy regressions.
-- **Held-out isolation**: Evaluates the held-out split strictly once post-selection, preventing test data leakage into candidate generation or selection.
-- **Reproducible empirical accounting**: Produces byte-identical canonical artifacts (`first_run.json`, `history.jsonl`, `metrics.csv`, `progress.svg`) and numerically verified reports (`report.md`).
+- Generates, evaluates, and selects keyword-rule changes on synthetic text.
+- Checks each proposed change against vocabulary, polarity, and bias rules.
+- Rejects changes that reduce accuracy on development data.
+- Measures held-out data once after selection ends.
+- Writes reproducible run records and checked result summaries.
 
-<p align="center">
-  <a href="#at-a-glance">At a Glance</a> ·
-  <a href="#experiment-status">Status</a> ·
-  <a href="#how-the-loop-works">Loop</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="#measured-results">Results</a> ·
-  <a href="#limitations">Limitations</a>
-</p>
+## Quick start
 
-This repository tests one narrow question:
+The deterministic run uses only the Python standard library.
 
-> Can a fixed base model improve held-out task performance through iterative
-> candidate generation, evaluation, and selection?
+```bash
+git clone https://github.com/rustfuture/rsi-experimental-framework.git
+cd rsi-experimental-framework
+python -m rsi_framework --config config/default.json --output /tmp/rsi-run
+```
 
-The framework provides a deterministic baseline, validated provider inputs,
-candidate lineage, held-out isolation, and reproducible artifacts. It makes no
-claim that this produces intelligence.
+For a guided notebook, open [`notebooks/rsi_open_weight_colab.ipynb`](notebooks/rsi_open_weight_colab.ipynb) in Colab. Its default path runs the deterministic harness; the optional local model path needs a GPU runtime.
 
+## How it works
 
-## At a Glance
+- It creates 32 synthetic sentences and divides them into train, development, and held-out groups.
+- A generator proposes one-word keyword edits or small bias changes.
+- A validation step rejects malformed edits, words outside the allowed vocabulary, polarity conflicts, and bias outside its allowed range.
+- The framework scores candidates on the train and development groups, then rejects candidates that lower development accuracy.
+- It records accepted candidates in an event history and checks the held-out group only after selection ends.
 
-| | |
-|---|---|
-| Language | Python 3.10+; deterministic path needs only the standard library |
-| Experiment | Keyword-policy search over a fixed 32-sentence synthetic pool |
-| Candidate gate | `validate_proposal` (single edit, vocabulary, polarity, bias bound) |
-| Providers | Deterministic mutator (default), JSON proposals, optional local Transformers |
-| Reproducibility | Canonical artifacts are byte-identical; CI re-runs and compares |
-| Tests | 35 unit tests (CI on Python 3.11) |
+## Tests
+
+CI runs these commands:
+
+```bash
+python -m unittest discover -s tests -v
+python -m rsi_framework.reporting --results results --readme README.md --check
+python -m rsi_framework --config config/default.json --output /tmp/rsi-replay
+for f in first_run.json history.jsonl metrics.csv progress.svg; do
+  cmp "results/$f" "/tmp/rsi-replay/$f"
+done
+python -m rsi_framework --run-all-benchmarks --output /tmp/rsi-benchmarks
+python - <<'PY'
+import json, pathlib, sys
+
+def strip(obj):
+    if isinstance(obj, dict):
+        return {k: strip(v) for k, v in obj.items() if k != "runtime_seconds"}
+    if isinstance(obj, list):
+        return [strip(v) for v in obj]
+    return obj
+
+failed = False
+for name in ("multi_seed_results.json", "ablation_results.json"):
+    committed = strip(json.loads(pathlib.Path("results", name).read_text()))
+    replayed = strip(json.loads(pathlib.Path("/tmp/rsi-benchmarks", name).read_text()))
+    if committed != replayed:
+        failed = True
+        print(f"MISMATCH: {name}", file=sys.stderr)
+sys.exit(1 if failed else 0)
+PY
+```
+
+The tests cover experiment mechanics, reporting, byte-for-byte output replay, and benchmark results apart from runtime duration.
 
 ## Experiment Status
 
@@ -54,55 +79,9 @@ claim that this produces intelligence.
 | Local open-weight provider | Implemented |
 | Real-model RSI evidence | Not yet recorded |
 
-## How the Loop Works
-
-```mermaid
-flowchart TD
-    C[Config + seed] --> G[Candidate generator]
-    G -->|deterministic mutator, JSON file, or local model| V[validate_proposal gate]
-    V -->|rejected| R[Recorded rejection]
-    V -->|accepted| S[Score on train / dev]
-    S --> D{Dev regression?}
-    D -->|yes| X[Reject candidate]
-    D -->|no| A[Accept and advance active policy]
-    A --> L[Immutable lineage record]
-    X --> L
-    L --> H[Held-out measurement - post-selection only]
-```
-
-The held-out split is never passed to candidate generation, scoring, or selection.
-Only the final accepted policy is measured against it.
-
-## Quick Start
-
-The deterministic harness needs no third-party dependencies.
-
-```bash
-git clone https://github.com/rustfuture/rsi-experimental-framework.git
-cd rsi-experimental-framework
-
-# Full test suite: harness mechanics, lineage, provenance, reporting
-python3 -m unittest discover -s tests -v
-
-# Single deterministic run; render report.md from the artifacts
-python3 -m rsi_framework --config config/default.json --output /tmp/rsi-run
-
-# Bit-for-bit reproducibility of the deterministic artifacts
-python3 -m rsi_framework --config config/default.json --output /tmp/rsi-replay
-cmp results/first_run.json /tmp/rsi-replay/first_run.json
-
-# Verify report.md and the README results block against the committed artifacts
-python3 -m rsi_framework.reporting --results results --readme README.md --check
-```
-
-Prefer a zero-setup walkthrough? Open
-[`notebooks/rsi_open_weight_colab.ipynb`](notebooks/rsi_open_weight_colab.ipynb) in
-Colab. Its default path is CPU-safe (deterministic harness); the local open-weight
-provider path is optional and requires a GPU runtime.
-
 ## Measured Results
 
-> The block below is generated from `results/*.json` by
+> This block is generated from `results/*.json` by
 > `python -m rsi_framework.reporting --results results --readme README.md --update`.
 > A regression test (`test_report_numbers_match_artifacts`) fails if it drifts from
 > the artifacts. Experiment version: `v2-token-match`; v1 archives live in
@@ -138,88 +117,29 @@ All seeds re-shuffle the same 32-row synthetic pool; these are replays of one to
 | `ablation_random_selection` | 0.375 | +0.000 | 8 | flat |
 <!-- END GENERATED: empirical results -->
 
-All raw and machine-readable data live under [`results/`](results/):
-
-| Artifact | Contents |
-|---|---|
-| [`results/first_run.json`](results/first_run.json) | Canonical single-run record (byte-reproducible) |
-| [`results/history.jsonl`](results/history.jsonl) | Step-by-step search trajectory |
-| [`results/metrics.csv`](results/metrics.csv) | Generation metrics |
-| [`results/multi_seed_results.json`](results/multi_seed_results.json) | Multi-seed aggregates (embed runtime) |
-| [`results/ablation_results.json`](results/ablation_results.json) | Ablation runs with mechanism descriptions |
-| [`results/provenance.json`](results/provenance.json) | Source commit, config hash, dataset hash, command |
-| [`results/report.md`](results/report.md) | Rendered human-readable summary |
-| [`results/archive-v1/`](results/archive-v1/) | Superseded v1 artifacts, preserved verbatim |
+The raw records and generation logs are indexed in [docs/reference.md](docs/reference.md), including [`results/first_run.json`](results/first_run.json), [`results/history.jsonl`](results/history.jsonl), [`results/metrics.csv`](results/metrics.csv), [`results/multi_seed_results.json`](results/multi_seed_results.json), [`results/ablation_results.json`](results/ablation_results.json), [`results/provenance.json`](results/provenance.json), and [`results/report.md`](results/report.md).
 
 ## Optional Local Model Provider
 
-Implementation status:
+The code includes `LocalTransformersProvider` in `rsi_framework/providers.py`. It runs an open Hugging Face language model locally to propose keyword rules, using `--provider llm`, `--model`, and `--device`.
 
-- **Implemented.** `LocalTransformersProvider` (`rsi_framework/providers.py`) loads
-  `--model` with HuggingFace Transformers on a validated `--device`;
-  `LLMMutationGenerator` turns its output into candidate policies; the CLI exposes
-  `--provider llm`, `--model`, and `--device`.
-- **No real-model RSI experiment has been run or recorded.** Every result on this
-  page is the deterministic baseline (`HARNESS_BASELINE_NOT_LLM`). No intelligence
-  improvement is claimed for the toy baseline or for the unrecorded provider path.
-
-Every proposal from every provider passes through the central
-`validate_proposal` gate before scoring: no-ops, multi-element edits,
-out-of-vocabulary or malformed keywords, keywords shared across polarities, and
-out-of-bound bias are rejected.
+No experiment with a real model has been run or recorded. All results above come from the deterministic baseline (`HARNESS_BASELINE_NOT_LLM`). Proposals still pass through `validate_proposal`; an unavailable requested device stops the run with `EXPERIMENT_BLOCKED_BY_RUNTIME`.
 
 ```bash
-# Requires torch and transformers in the active environment; the deterministic path does not.
+# Requires torch and transformers in the active environment
 python3 -m rsi_framework --provider llm --model Qwen/Qwen2.5-0.5B-Instruct --device auto
-```
-
-An unavailable runtime or requested device exits with
-`EXPERIMENT_BLOCKED_BY_RUNTIME` instead of silently substituting another device.
-
-## Reproducibility
-
-CI runs the full unit suite, checks that `report.md` and the README generated block
-match the committed artifacts, replays the deterministic artifacts byte-for-byte,
-and re-runs the benchmarks comparing every number except `runtime_seconds`.
-
-```bash
-# Multi-seed evaluation and ablations, refreshing report.md + README block in place
-python3 -m rsi_framework --run-all-benchmarks --output results --readme README.md
-
-# Compare artifacts without touching the committed copies
-python3 -m rsi_framework --config config/default.json --output /tmp/rsi-replay
-python3 -m rsi_framework --run-all-benchmarks --output /tmp/rsi-benchmarks
 ```
 
 ## Limitations
 
-- **Harness validation, not intelligence.** The loop validates search-state
-  accounting, rejection mechanics, and split containment. It establishes no
-  reasoning, emergence, or unbounded self-improvement.
-- **`improvement` / `flat` / `regression` are operational labels.** They come from
-  one held-out comparison under a fixed tolerance on one run — not significance,
-  equivalence, or confidence intervals.
-- **Tiny held-out split.** Each run measures 8 held-out examples; one example moves
-  accuracy by 0.125.
-- **Lexical synthetic data.** The 8-concept sentence pool is shared by every seed,
-  so multi-seed runs replay one toy dataset rather than independent samples.
-- **Provider boundary.** The optional local provider is implemented and validated,
-  but no real-model experiment is recorded here.
-- **No paid APIs.** No cloud LLM APIs are used or required.
+- The harness checks experiment bookkeeping, not machine intelligence, reasoning, or open-ended self-improvement.
+- The outcome labels (`improvement`, `flat`, `regression`) describe one held-out comparison; they do not show statistical significance.
+- Each run measures 8 held-out examples; one example changes accuracy by 0.125.
+- Every seed uses the same 32-sentence synthetic pool, so the runs are replays of one toy dataset.
+- The local model provider is implemented, but no real-model experiment has been recorded.
+- The framework uses no cloud models or paid services.
 
-See [`DESIGN.md`](DESIGN.md) for the hypotheses, mechanics, and literature citations.
-
-## Repository Map
-
-| Path | Contents |
-|---|---|
-| `rsi_framework/core.py` | Experiment loop, scoring, lineage, ablations |
-| `rsi_framework/providers.py` | Provider boundary, validation gate, local provider |
-| `rsi_framework/reporting.py` | Provenance, report rendering, README check |
-| `rsi_framework/cli.py` | `python -m rsi_framework` entry point |
-| `tests/` | Core, provider-boundary, and device-resolution tests |
-| `results/` | Committed deterministic artifacts |
-| `notebooks/rsi_open_weight_colab.ipynb` | Optional GPU walkthrough |
+See [`DESIGN.md`](DESIGN.md) for the hypotheses, experiment details, and literature citations.
 
 ## License
 
