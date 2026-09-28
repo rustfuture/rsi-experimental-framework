@@ -1,6 +1,8 @@
 # RSI Experimental Framework
 
-This software tests systems that repeatedly change their own methods by improving text classification rules through repeated trials.
+This software tests an iterative propose, validate and select loop that improves keyword rules for text classification on a small synthetic dataset.
+
+RSI (recursive self-improvement) is the research question behind the name. This setup only edits keyword lists and makes no self-improvement claim.
 
 [![CI](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/rustfuture/rsi-experimental-framework/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
