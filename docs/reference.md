@@ -28,6 +28,7 @@ All raw and machine-readable data live under [`results/`](../results/):
 | [`results/ablation_results.json`](../results/ablation_results.json) | Ablation runs with mechanism descriptions |
 | [`results/provenance.json`](../results/provenance.json) | Source commit, config hash, dataset hash, command |
 | [`results/report.md`](../results/report.md) | Rendered human-readable summary |
+| [`pool-and-ablations.md`](pool-and-ablations.md) | Note on what the 32-sentence pool and the ablation table can and cannot show |
 | [`results/archive-v1/`](../results/archive-v1/) | Superseded v1 artifacts, preserved verbatim |
 
 ### Historical Notes on Versioning
