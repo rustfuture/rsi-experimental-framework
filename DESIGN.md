@@ -69,7 +69,8 @@ The candidate loop implements monotonic greedy local search:
    ever reverted: this is candidate rejection, not rollback of an applied state. The
    historical label `rollback_regression` appears only in v1 archives. The rule is a
    fixed-tolerance comparison, not a confidence-interval or trust-region barrier.
-5. **Held-out Isolation**: the held-out split is measured once, after selection stops,
+5. **Held-out Isolation**: the held-out split is scored only after selection stops (once
+   for the baseline policy and once for the final policy, both in `rsi_framework/core.py`),
    and never enters generation, scoring, or the rejection rule.
 
 ## Scoped Data-Isolation Check
