@@ -18,13 +18,15 @@ RSI (recursive self-improvement) is the research question behind the name. This 
 
 ## Quick start
 
-The deterministic run uses only the Python standard library.
+You need Git and Python 3.10+ ([Python downloads](https://www.python.org/downloads/)). The deterministic run uses only the Python standard library: no package installation, model weights, GPU, or API key is needed.
 
 ```bash
 git clone https://github.com/rustfuture/rsi-experimental-framework.git
 cd rsi-experimental-framework
-python -m rsi_framework --config config/default.json --output /tmp/rsi-run
+python3 -m rsi_framework --config config/default.json --output /tmp/rsi-run
 ```
+
+The command prints a JSON summary and writes run artifacts plus `report.md` to `/tmp/rsi-run`, leaving committed results unchanged. On Windows, use your Python 3 command (for example `py -3`) and a local output directory such as `runs/rsi-run` instead of `/tmp/rsi-run`.
 
 For a guided notebook, open [`notebooks/rsi_open_weight_colab.ipynb`](notebooks/rsi_open_weight_colab.ipynb) in Colab. Its default path runs the deterministic harness; the optional local model path needs a GPU runtime.
 
