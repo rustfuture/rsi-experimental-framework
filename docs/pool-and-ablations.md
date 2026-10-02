@@ -60,8 +60,10 @@ The ablation table uses one seed. Re-running the same code on the multi-seed see
 
 ## What the pool can distinguish
 
-- Any real proposer versus none (`no_mutation` 3/8) and versus score-free choice
-  (`random_selection` 3-5/8): the gap is large relative to one example.
+- On seed 20260915, the evaluated deterministic proposer reaches 8/8 held-out
+  correct, versus 3/8 for both `no_mutation` and `random_selection` in the
+  committed ablation table. This comparison does not establish how other
+  proposers would perform.
 - Whether a proposer discovers the four true positive cue words.
 
 ## What the pool cannot distinguish
@@ -88,15 +90,11 @@ The ablation table uses one seed. Re-running the same code on the multi-seed see
 
 ## Status of a real-model run
 
-A run of `python3 -m rsi_framework --provider llm --model Qwen/Qwen2.5-0.5B-Instruct
---device auto` was attempted on 2026-09-29 and could not be performed in that
-environment. The egress policy returned HTTP 403 to CONNECT for
-`download.pytorch.org` (CPU torch wheels) and `huggingface.co` /
-`cdn-lfs.huggingface.co` (model weights), so no weights could be fetched and no
-smaller open model was reachable either. No LLM result exists, nothing was
-simulated, and the README status row `Real-model RSI evidence: Not yet recorded` is
-unchanged. Separately, reading `LocalTransformersProvider` shows that its prompt
-lists only the current keywords (no task data, allowed vocabulary, or chat
+No committed artifact documents the reported 2026-09-29 attempt or its network
+failure, so this note does not use that account as evidence. The README status
+row `Real-model RSI evidence: Not yet recorded` is unchanged.
+
+Separately, reading `LocalTransformersProvider` shows that its prompt lists only the current keywords (no task data, allowed vocabulary, or chat
 template) and that the CLI does not restrict the proposer's vocabulary unless
 `provider_keyword_vocabulary` is set in the config; a first real run will likely
 have most proposals rejected or uninformative. That is untested speculation until a
