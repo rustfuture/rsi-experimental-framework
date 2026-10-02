@@ -1,5 +1,7 @@
 # RSI Experimental Framework
 
+![rsi-experimental-framework project overview](docs/images/social-preview.png)
+
 This software tests an iterative propose, validate and select loop that improves keyword rules for text classification on a small synthetic dataset.
 
 RSI (recursive self-improvement) is the research question behind the name. This setup only edits keyword lists and makes no self-improvement claim.
