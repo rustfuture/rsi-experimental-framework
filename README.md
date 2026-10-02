@@ -13,7 +13,7 @@ RSI (recursive self-improvement) is the research question behind the name. This 
 - Generates, evaluates, and selects keyword-rule changes on synthetic text.
 - Checks each proposed change against vocabulary, polarity, and bias rules.
 - Rejects changes that reduce accuracy on development data.
-- Measures held-out data once after selection ends.
+- Scores held-out data only after selection ends (once for the baseline policy and once for the final policy).
 - Writes reproducible run records and checked result summaries.
 
 ## Quick start
