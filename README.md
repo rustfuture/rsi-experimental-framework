@@ -10,7 +10,8 @@ RSI (recursive self-improvement) is the research question behind the name. This 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rustfuture/rsi-experimental-framework/blob/main/notebooks/rsi_open_weight_colab.ipynb)
 
-**Status:** Research prototype; deterministic baseline validated, no real-model evidence yet.
+> [!NOTE]
+> **Status:** Research prototype; deterministic baseline validated, no real-model evidence yet.
 
 - Generates, evaluates, and selects keyword-rule changes on synthetic text.
 - Checks each proposed change against vocabulary, polarity, and bias rules.
@@ -44,6 +45,8 @@ For a guided notebook, open [`notebooks/rsi_open_weight_colab.ipynb`](notebooks/
 
 CI runs these commands:
 
+<details><summary>CI commands</summary>
+
 ```bash
 python -m unittest discover -s tests -v
 python -m rsi_framework.reporting --results results --readme README.md --check
@@ -72,6 +75,8 @@ for name in ("multi_seed_results.json", "ablation_results.json"):
 sys.exit(1 if failed else 0)
 PY
 ```
+
+</details>
 
 The tests cover experiment mechanics, reporting, byte-for-byte output replay, and benchmark results apart from runtime duration.
 
