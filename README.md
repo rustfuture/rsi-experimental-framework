@@ -31,6 +31,37 @@ python3 -m rsi_framework --config config/default.json --output /tmp/rsi-run
 
 The command prints a JSON summary and writes run artifacts plus `report.md` to `/tmp/rsi-run`, leaving committed results unchanged. On Windows, use your Python 3 command (for example `py -3`) and a local output directory such as `runs/rsi-run` instead of `/tmp/rsi-run`.
 
+### Expected output
+
+<!-- quickstart-output -->
+```text
+{
+  "accepted_new_changes": 4,
+  "accepted_versions_including_baseline": 5,
+  "experiment_version": "v2-token-match",
+  "final": {
+    "dev": {
+      "accuracy": 1.0,
+      "correct": 8,
+      "total": 8
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "correct": 8,
+      "total": 8
+    },
+    "train": {
+      "accuracy": 1.0,
+      "correct": 16,
+      "total": 16
+    },
+    "version": "candidate-9b822e7297ac"
+  },
+  "outcome": "improvement",
+  "rejected_proposals": 0
+}
+```
+
 For a guided notebook, open [`notebooks/rsi_open_weight_colab.ipynb`](notebooks/rsi_open_weight_colab.ipynb) in Colab. Its default path runs the deterministic harness; the optional local model path needs a GPU runtime.
 
 ## How it works
